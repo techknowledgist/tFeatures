@@ -48,6 +48,9 @@ def xml2txt(doc_parser, source, source_file, target_file, workspace):
     xml directory. This includes some cleaning of the source file by adding some
     spaces, see clean_file() and clean_tag() for more details."""
     basename = os.path.basename(target_file)
+    if source == 'text':
+        parse_text_doc(source_file, target_file)
+        return
     cleaned_source_file = os.path.join(workspace, "%s.clean" % basename)
     clean_file(source_file, cleaned_source_file, opentag_idx, closetag_idx)
     if source == 'ln':
@@ -616,8 +619,8 @@ class ThymeFile(object):
 
 class SPV1File(object):
 
-    """Document parser for SPV1 files. SPV1 is the JSON format produced by Science Parse
-    (https://github.com/allenai/science-parse)."""
+    """Document parser for SPV1 files. SPV1 is the JSON format produced by Science
+    Parse (https://github.com/allenai/science-parse)."""
 
     def __init__(self, json_file, txt_file):
         self.fname = json_file
@@ -643,6 +646,13 @@ class SPV1File(object):
                     text = section.get("text")
                     if text is not None:
                         out.write(text + "\n")
+
+
+def parse_text_doc(source_file, target_file):
+    with codecs.open(source_file, encoding='utf8') as fh_in:
+        with codecs.open(target_file, 'w', encoding='utf8') as fh_out:
+            fh_out.write("FH_DESCRIPTION:\n")
+            fh_out.write(fh_in.read())
 
 
 def collect_text(n):

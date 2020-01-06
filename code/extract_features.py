@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     count = 0
     for line in open(corpus.file_list):
-        filename = line.strip().split()[2]
+        filename = line.strip().split("\t")[2]
         count += 1
         if count % 100 == 0:
             print "%6d  %s" % (count, filename)
